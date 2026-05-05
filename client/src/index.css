@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --fb-bg: #060b13;
+  --fb-surface: rgba(255, 255, 255, 0.035);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(1200px circle at 20% -10%, #1f2a72 0%, transparent 45%),
+    radial-gradient(900px circle at 90% 0%, #064e3b 0%, transparent 42%), var(--fb-bg);
+  color: #e8eef9;
+}
+
+#root > .flowboard-shell {
+  min-height: 100%;
+}
+
+/* scrollbar */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 10px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(56, 189, 248, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  }
+}
+
+.fb-highlight-pulse {
+  animation: pulseGlow 0.8s ease-out 1;
+}

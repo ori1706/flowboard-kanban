@@ -1,0 +1,12 @@
+app = 'flowboard-kanban-replace-me'
+primary_region = 'iad'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  PORT = '4000'
+
+[http_service]
+  internal_port = 4000
+  force_https = true

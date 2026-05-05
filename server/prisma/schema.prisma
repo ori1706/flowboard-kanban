@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  passwordHash String
+  avatarUrl String
+  boards    Board[]  @relation("BoardOwner")
+  boardAccess BoardAccess[]
+  comments  Comment[]
+  activities Activity[]
+  cardMembers CardMember[]
+}
+
+model Board {
+  id            String    @id @default(cuid())
+  name          String
+  coverGradient String    @default("linear-gradient(135deg,#6366f1,#4338ca)")
+  ownerId       String
+  owner         User      @relation("BoardOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lists         List[]
+  labels        Label[]
+  activities    Activity[]
+  accesses      BoardAccess[]
+}
+
+model BoardAccess {
+  boardId String
+  userId  String
+  board   Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([boardId, userId])
+}
+
+model List {
+  id       String @id @default(cuid())
+  boardId  String
+  board    Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  name     String
+  position Float
+  cards    Card[]
+}
+
+model Card {
+  id          String    @id @default(cuid())
+  listId      String
+  list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
+  title       String
+  description String    @default("")
+  position    Float
+  dueDate     DateTime?
+  coverColor  String?
+  coverImage  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  labels      CardLabel[]
+  checklists  Checklist[]
+  comments    Comment[]
+  activities  Activity[]
+  members     CardMember[]
+}
+
+model CardMember {
+  cardId String
+  userId String
+  card   Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([cardId, userId])
+}
+
+model Label {
+  id     String      @id @default(cuid())
+  boardId String
+  board  Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  name   String
+  color  String
+  cards  CardLabel[]
+}
+
+model CardLabel {
+  cardId  String
+  labelId String
+  card    Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  label   Label  @relation(fields: [labelId], references: [id], onDelete: Cascade)
+  @@id([cardId, labelId])
+}
+
+model Checklist {
+  id     String          @id @default(cuid())
+  cardId String
+  card   Card            @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  title  String
+  items  ChecklistItem[]
+}
+
+model ChecklistItem {
+  id          String    @id @default(cuid())
+  checklistId String
+  checklist   Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  text        String
+  done        Boolean   @default(false)
+  position    Float
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  cardId    String
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body      String
+  createdAt DateTime @default(now())
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  cardId    String?
+  card      Card?    @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  boardId   String?
+  board     Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  payload   Json     @default("{}")
+  createdAt DateTime @default(now())
+}
