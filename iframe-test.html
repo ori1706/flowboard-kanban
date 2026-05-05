@@ -6,7 +6,20 @@
 </head>
 <body>
 <h2 style="margin:0 0 16px">Iframe embed check · FlowBoard</h2>
-<p style="opacity:.75;margin-bottom:24px;font-size:14px;width:320px">{ resize window / change iframe widths for 800 vs 1200 tests }</p>
-<iframe src="http://localhost:5173" title="FlowBoard" width="1200" height="720" allow="autoplay; clipboard-write"></iframe>
+<p style="opacity:.75;margin-bottom:24px;font-size:14px;max-width:520px">Point at your Vite dev port (default 5173). Static hosts may drop query strings — use a hash: <code>#port=5177</code> or query <code>?port=5177</code>. Use the port Vite prints (e.g. if 5173–5176 are busy). Iframes use <code>http://localhost:&lt;port&gt;/</code>.</p>
+<p style="opacity:.85;font-size:13px;margin:8px 0 4px">~1200px embed</p>
+<iframe id="embed-wide" title="FlowBoard wide" width="1200" height="520" allow="autoplay; clipboard-write"></iframe>
+<p style="opacity:.85;font-size:13px;margin:16px 0 4px">~800px embed</p>
+<iframe id="embed-narrow" title="FlowBoard narrow" width="800" height="520" allow="autoplay; clipboard-write"></iframe>
+<script>
+(function () {
+  var q = new URLSearchParams(window.location.search);
+  var h = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+  var port = q.get("port") || h.get("port") || "5173";
+  var base = "http://localhost:" + port + "/";
+  document.getElementById("embed-wide").src = base;
+  document.getElementById("embed-narrow").src = base;
+})();
+</script>
 </body>
 </html>

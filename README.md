@@ -90,8 +90,8 @@ npm run dev
 
 ### Iframe test (shared spec)
 
-1. With dev servers running, open `iframe-test.html` in a browser (or `npx serve .` from repo root and visit the file).
-2. Confirm no `X-Frame-Options` block; card modal and drag overlay stay inside the iframe.
+1. With dev servers running, open `iframe-test.html` in a browser (or `npx serve .` from repo root — some static servers strip `?port=`; use **`iframe-test.html#port=5177`** matching the port Vite prints, e.g. `http://127.0.0.1:9333/iframe-test.html#port=5177`).
+2. Confirm no `X-Frame-Options` block; card modal and drag overlay stay inside the iframe (~1200px and ~800px embeds are on the same page).
 
 ## Docker (single container, API + static UI)
 
