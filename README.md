@@ -130,10 +130,10 @@ gh repo create ori1706/flowboard-kanban --public --source=. --push --description
 ### Vercel (frontend-only path)
 
 ```bash
-cd client && npx vercel --prod --yes
+cd client && npx vercel --prod --yes --name kanban-showcase-flow
 ```
 
-Set `VITE_API_URL` / `VITE_SOCKET_URL` to your deployed API origin. If interactive auth is required, complete login in the CLI and re-run.
+Set `VITE_API_URL` / `VITE_SOCKET_URL` to your deployed API origin at **build** time (these are baked into the client bundle). If interactive auth is required, complete login in the CLI and re-run. Use a unique `--name` to avoid colliding with other showcase projects on a shared Vercel team.
 
 ### Backend (Fly / Render / Railway)
 
