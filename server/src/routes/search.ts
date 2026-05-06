@@ -17,7 +17,7 @@ searchRouter.get('/', async (req, res) => {
     where: boardMembershipWhere(userId),
     select: { id: true },
   });
-  const boardIds = boards.map((b) => b.id);
+  const boardIds = boards.map((b: (typeof boards)[number]) => b.id);
   if (!boardIds.length) {
     res.json([]);
     return;
@@ -43,7 +43,7 @@ searchRouter.get('/', async (req, res) => {
   });
 
   res.json(
-    cards.map((c) => ({
+    cards.map((c: (typeof cards)[number]) => ({
       cardId: c.id,
       title: c.title,
       descriptionPreview: c.description.slice(0, 160),

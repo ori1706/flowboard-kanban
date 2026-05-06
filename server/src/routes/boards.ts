@@ -26,7 +26,7 @@ boardsRouter.get('/', async (req, res) => {
     },
   });
   res.json(
-    boards.map((b) => ({
+    boards.map((b: (typeof boards)[number]) => ({
       id: b.id,
       name: b.name,
       coverGradient: b.coverGradient,
