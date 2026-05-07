@@ -33,7 +33,7 @@
 
 ## Demo credentials
 
-Auth uses **JWT in `localStorage`** (no cookies) — chosen for iframe / cross-origin demo simplicity.
+Auth uses **JWT in `localStorage`** (no cookies) — keeps the sandbox simple across origins without NextAuth cookie setup.
 
 | User | Password |
 |------|----------|
@@ -88,10 +88,10 @@ npm run dev
 - **UI:** http://localhost:5173  
 - **API + Socket.IO:** http://localhost:4000 (proxied from Vite for `/api` and `/socket.io`)
 
-### Iframe test (shared spec)
+### Embed preview (`iframe-test.html`)
 
 1. With dev servers running, open `iframe-test.html` in a browser (or `npx serve .` from repo root — some static servers strip `?port=`; use **`iframe-test.html#port=5177`** matching the port Vite prints, e.g. `http://127.0.0.1:9333/iframe-test.html#port=5177`).
-2. Confirm no `X-Frame-Options` block; card modal and drag overlay stay inside the iframe (~1200px and ~800px embeds are on the same page).
+2. Confirm no `X-Frame-Options` block; card modal and drag overlay stay inside the embed (~1200px and ~800px previews on the same page).
 
 ## Docker (single container, API + static UI)
 
@@ -141,7 +141,7 @@ Set `VITE_API_URL` / `VITE_SOCKET_URL` to your deployed API origin at **build** 
 - **Render:** use `render.yaml` blueprint; set `DATABASE_URL` in dashboard.
 - **Supabase:** create project → copy connection string into `DATABASE_URL`.
 
-### Headers (iframe)
+### Headers (embedding)
 
 Express sets **`Content-Security-Policy: frame-ancestors *`** (via custom header) and does **not** send `X-Frame-Options`. Verify production:
 
@@ -149,7 +149,7 @@ Express sets **`Content-Security-Policy: frame-ancestors *`** (via custom header
 curl -I https://your-api-host/health
 ```
 
-## Iframe embed (parent career page)
+## Embed snippet (parent page)
 
 ```html
 <iframe
@@ -169,9 +169,9 @@ For local dev:
 <iframe src="http://localhost:5173" width="1200" height="720" title="FlowBoard" allow="autoplay; clipboard-write"></iframe>
 ```
 
-## DnD + iframe notes
+## Drag-and-drop + layout notes
 
-- **Modal:** Rendered with `createPortal` into `#flowboard-modal-root`, a child of `.flowboard-shell` with `position: relative` and `overflow: hidden` — avoids viewport-fixed clipping in iframes.
+- **Modal:** Rendered with `createPortal` into `#flowboard-modal-root`, a child of `.flowboard-shell` with `position: relative` and `overflow: hidden` — avoids viewport-fixed clipping when nested.
 - **DragOverlay:** Uses `@dnd-kit` default overlay; keep the app shell `overflow: hidden` on the modal layer only; board area uses horizontal scroll for lists.
 - **Socket:** `io({ cors: { origin: true, credentials: true } })` on the server; Vite dev proxies WebSocket.
 

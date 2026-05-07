@@ -319,7 +319,7 @@ async function main() {
       listId: bgInbox.id,
       title: 'Mobile drag ghost clipped under browser chrome',
       description:
-        'Safari/iOS iframe embeds truncate drag overlay bounds — **severity high**.\n\n```\nnavigator.userAgent\n```\nCaptured in staging.',
+        'Safari/iOS WebKit truncates drag overlay bounds in nested views — **severity high**.\n\n```\nnavigator.userAgent\n```\nCaptured in staging.',
       position: 900,
       dueDate: new Date(new Date().setDate(new Date().getDate() + 1)),
       coverColor: '#450a0a',

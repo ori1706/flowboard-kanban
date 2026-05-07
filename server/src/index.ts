@@ -1,5 +1,5 @@
 /**
- * Stateless JWT demo auth — localStorage client-side avoids iframe SameSite pitfalls.
+ * Stateless JWT demo auth — tokens live in localStorage on the client to avoid cross-site cookie limits.
  */
 import path from 'node:path';
 import fs from 'node:fs';
@@ -28,7 +28,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me-32characters'
 
 const app = express();
 
-/** Iframe-friendly: explicit permissive CSP; no X-Frame-Options */
+/** Permissive CSP for nesting; omit X-Frame-Options deny/same-origin. */
 app.use((_req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
