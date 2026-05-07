@@ -99,6 +99,10 @@ app.get('/api/me', async (req, res) => {
     where: { id: payload.userId },
     select: { id: true, name: true, email: true, avatarUrl: true },
   });
+  if (!user) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
   res.json(user);
 });
 

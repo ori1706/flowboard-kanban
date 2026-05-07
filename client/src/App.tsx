@@ -8,7 +8,7 @@ import CardModalHost from '@/components/CardModalHost';
 import SearchPalette from '@/components/SearchPalette';
 import { api } from '@/lib/api';
 import type { CardDetail } from '@/types';
-import { getToken, setToken } from '@/lib/session';
+import { clearToken, getToken, setToken } from '@/lib/session';
 
 export default function App() {
   const [route, setRoute] = useState<{ name: 'boards' } | { name: 'board'; id: string }>({
@@ -30,6 +30,7 @@ export default function App() {
       const me = (await api.me()) as Record<string, string>;
       return me;
     },
+    retry: 1,
   });
 
   const openBoard = useCallback((id: string) => setRoute({ name: 'board', id }), []);
@@ -55,7 +56,50 @@ export default function App() {
     return () => window.removeEventListener('keydown', kd);
   }, []);
 
-  if (bootstrap.isLoading || !bootstrap.data) {
+  if (bootstrap.isError) {
+    const msg =
+      bootstrap.error instanceof Error ? bootstrap.error.message : 'Unknown error';
+    return (
+      <div className="flex h-full min-h-[480px] flex-col items-center justify-center gap-4 px-6 text-center text-sm text-teal-200/85">
+        <p className="max-w-md text-balance font-medium text-white">
+          Couldn&apos;t load the workspace.
+        </p>
+        <p className="max-w-lg text-xs text-slate-400 leading-relaxed text-balance">
+          From the <code className="text-slate-300">Showcase-Kanban</code> folder run{' '}
+          <code className="rounded bg-white/10 px-1 py-0.5 text-[11px] text-teal-200/90">
+            npm run dev
+          </code>{' '}
+          so both Vite (port 5173) and Express (4000) are up, Postgres is migrated, then
+          retry. If this page was opened without the dev servers, requests to{' '}
+          <code className="text-slate-300">/api</code> fail.
+        </p>
+        <pre className="max-w-full overflow-x-auto rounded-lg border border-white/10 bg-slate-950/80 px-3 py-2 text-left font-mono text-[11px] text-rose-200/90">
+          {msg}
+        </pre>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => void bootstrap.refetch()}
+            className="rounded-xl bg-teal-500/90 px-4 py-2 font-semibold text-slate-950 hover:bg-teal-400"
+          >
+            Retry
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              clearToken();
+              void bootstrap.refetch();
+            }}
+            className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 font-medium text-slate-200 hover:bg-white/10"
+          >
+            Reset demo token
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (bootstrap.isPending) {
     return (
       <div className="flex h-full min-h-[480px] items-center justify-center text-sm text-teal-200/80">
         Bootstrapping workspace…

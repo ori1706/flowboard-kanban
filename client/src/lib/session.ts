@@ -9,6 +9,10 @@ export function setToken(t: string) {
   localStorage.setItem(TOKEN_KEY, t);
 }
 
+export function clearToken() {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
 export function getClientId(): string {
   let id = sessionStorage.getItem(CLIENT_KEY);
   if (!id) {
