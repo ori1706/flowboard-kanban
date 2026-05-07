@@ -19,6 +19,7 @@ export default function App() {
     detail: CardDetail;
   } | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [bootstrapSlowHint, setBootstrapSlowHint] = useState(false);
 
   const bootstrap = useQuery({
     queryKey: ['bootstrap'],
@@ -55,6 +56,15 @@ export default function App() {
     window.addEventListener('keydown', kd);
     return () => window.removeEventListener('keydown', kd);
   }, []);
+
+  useEffect(() => {
+    if (!bootstrap.isPending) {
+      setBootstrapSlowHint(false);
+      return;
+    }
+    const t = window.setTimeout(() => setBootstrapSlowHint(true), 10_000);
+    return () => window.clearTimeout(t);
+  }, [bootstrap.isPending]);
 
   if (bootstrap.isError) {
     const msg =
@@ -101,8 +111,15 @@ export default function App() {
 
   if (bootstrap.isPending) {
     return (
-      <div className="flex h-full min-h-[480px] items-center justify-center text-sm text-teal-200/80">
-        Bootstrapping workspace…
+      <div className="flex h-full min-h-[480px] flex-col items-center justify-center gap-3 px-6 text-center text-sm text-teal-200/80">
+        <p>Bootstrapping workspace…</p>
+        {bootstrapSlowHint ? (
+          <p className="max-w-md text-balance text-xs leading-relaxed text-slate-400">
+            Still waiting on the API. Hosted backends on{' '}
+            <span className="text-slate-300">Render</span> free tier sometimes need a minute or more to
+            wake from sleep—you can leave this tab open or Retry after ~60s if it errors.
+          </p>
+        ) : null}
       </div>
     );
   }

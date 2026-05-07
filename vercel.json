@@ -3,5 +3,11 @@
   "installCommand": "npm install",
   "buildCommand": "npm run build -w client",
   "outputDirectory": "client/dist",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/((?!api/)(?!socket\\.io(?:/|$)).*)",
+      "destination": "/index.html"
+    },
+    { "source": "/", "destination": "/index.html" }
+  ]
 }
